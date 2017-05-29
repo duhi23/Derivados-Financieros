@@ -22,7 +22,7 @@ put <- function(S,X,r,sigma,Smax,M,N){
       for(j in 2:M){
             a[j] <- 0.5*r*j*dt -0.5*sigma^2*j^2*dt
             b[j] <- 1 + sigma^2*j^2*dt + r*dt
-            c[j] <- -0.5*r*j*dt -0.05*sigma^2*j^2*dt
+            c[j] <- -0.5*r*j*dt -0.5*sigma^2*j^2*dt
       }
       # Condiciones
       f <- matrix(0, ncol=N+1, nrow = M+1)
@@ -38,8 +38,19 @@ put <- function(S,X,r,sigma,Smax,M,N){
       for(i in 1:(N+1)){
             f[M+1,i] <- 0
       }
+      # Matriz de coeficientes
+      XM <- matrix(0,ncol=M-1, nrow=M-1)
+      XM[1,c(1,2)] <- c(b[2],c[2])
+      for(i in 2:(M-2)){
+            XM[i,c(i-1,i,i+1)] <- c(a[i+1], b[i+1], c[i+1])
+      }
+      XM[M-1,c(M-2,M-1)] <- c(a[M],b[M])
+      # Solucion del enmallado
+      for(i in N:1){
+            vec <- rev(f[2:M,i+1]) - c(a[2]*f[1,i], rep(0,M-3) , c[M]*f[M+1,i])
+            f[2:M,i] <- rev(apply(solve(XM)%*%diag(vec), MARGIN = 1, sum))
+      }
       return(f)
 }
-
 
 put(50,50,0.02,0.2,100,10,4)
