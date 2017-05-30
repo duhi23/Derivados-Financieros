@@ -47,10 +47,10 @@ put <- function(S,X,r,sigma,Smax,M,N){
       XM[M-1,c(M-2,M-1)] <- c(a[M],b[M])
       # Solucion del enmallado
       for(i in N:1){
-            vec <- rev(f[2:M,i+1]) - c(a[2]*f[1,i], rep(0,M-3) , c[M]*f[M+1,i])
-            f[2:M,i] <- rev(apply(solve(XM)%*%diag(vec), MARGIN = 1, sum))
+            vec <- f[2:M,i+1] - c(a[2]*f[1,i], rep(0,M-3) , c[M]*f[M+1,i])
+            f[2:M,i] <- apply(solve(XM)%*%diag(vec), MARGIN = 1, sum)
       }
-      return(f)
+      return(list(Malla=f, ValorPut=f[(X/ds)+1,1]))
 }
 
 put(50,50,0.02,0.2,100,10,4)
