@@ -32,38 +32,44 @@
 Consideremos una opción put americana a cuatro meses, sobre una acción que no paga dividendos, siendo el valor actual del subyacente 50 euros, el precio de ejercicio 50 euros, el tipo de interés sin riesgo el $2\%$ anual continuo y la volatilidad del subyacente se ha estimado en un $20\%$ anual. Elegiremos $S_ {max} = 100$, M = 10 y N = 4. Estimar el valor de esta opción por los métodos explícito e implícito. Aplicar el método de reducción de la varianza de ``control variante''.\newline
 
 {\bf Resolución empleando el método explícito:}\newline
-\begin{multicols}{2}
-\begin{figure}[H]
-\centering
-\begin{pspicture}[showgrid=false](-0.5,-0.5)(7.5,8)
-\psline[linewidth=1.5pt]{->}(0,-0.2)(0,8)
-\psline[linewidth=1.5pt]{->}(-0.2,0)(7.5,0)
-\multido{\rx=0+1.75, \ix=0+1}{5}{
-      \multido{\ry=0+0.75, \iy=0+10}{11}{
-            \rput(-0.4,\ry){\scriptsize \iy}
-            \psline[linestyle=dotted, linecolor=gray!30](0,\ry)(7,\ry)
-            \rput(\rx, \ry){\textcolor{red}{$\star$}}
-      }
-      \rput(\rx,-0.4){\scriptsize \ix}
-      \psline[linestyle=dotted, linecolor=gray!30](\rx,0)(\rx,7.5)
-}
-\end{pspicture}
-\end{figure}
+
+% \begin{figure}[H]
+% \centering
+% \begin{pspicture}[showgrid=false](-0.5,-0.5)(7.5,8)
+% \psline[linewidth=1.5pt]{->}(0,-0.2)(0,8)
+% \psline[linewidth=1.5pt]{->}(-0.2,0)(7.5,0)
+% \multido{\rx=0+1.75, \ix=0+1}{5}{
+%       \multido{\ry=0+0.75, \iy=0+10}{11}{
+%             \rput(-0.4,\ry){\scriptsize \iy}
+%             \psline[linestyle=dotted, linecolor=gray!30](0,\ry)(7,\ry)
+%             \rput(\rx, \ry){\textcolor{red}{$\star$}}
+%       }
+%       \rput(\rx,-0.4){\scriptsize \ix}
+%       \psline[linestyle=dotted, linecolor=gray!30](\rx,0)(\rx,7.5)
+% }
+% \end{pspicture}
+% \end{figure}
 
 El método implícito de diferencias finitas implica la resolución del sistema:
-\[a_j f_{i,j-1} +  b_j f_{i,j} + c_j f_{i,j+1} = f_{i+1,j}\]
-para $i=0,1,2,3$ y $j=1,2,\ldots,9$ donde:
+\[a_j f_{i,j-1} +  b_j f_{i,j} + c_j f_{i,j+1} = f_{i+1,j}\quad \text{para $i=0,1,2,3$ y $j=1,2,\ldots,9$}\]
+ donde:
 \[a_j=\frac{1}{2}rj\Delta t -\frac{1}{2}\sigma^2 j^2\Delta t=0.01j-0.02j^2\]
 \[b_j=1+\sigma^2 j^2\Delta t +r\Delta t=1.02+0.04j^2\]
 \[c_j=-\frac{1}{2}rj\Delta t -\frac{1}{2}\sigma^2 j^2 \Delta t=-0.01j-0.02j^2\]
 
-
-Usando las condiciones de contorno para un put americana obtenemos:
-
+Usando las condiciones de contorno para un put americana obtenemos que:
 \[f_{4,j}=\max(50-10j, 0)\quad \text{j=0,1,2,\ldots, 10}\]
 
-\end{multicols}
+además, si $S=0$, el valor de la put es $X$, por tanto:
+\[f_{i,0}=50, \quad \text{i=0,1,2,3,4}\]
 
+por último, el valor de la put tiende a cero si $S$ tiende a infinito:
+\[f_{i,10}=0, \quad \text{i=0,1,2,3,4}\]
+
+los coeficientes $a_j$, $b_j$ y $c_j$ se muestran en forma de matriz
+<<>>=
+
+@
 
 
 \end{document}
