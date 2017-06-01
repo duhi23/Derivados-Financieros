@@ -66,10 +66,58 @@ además, si $S=0$, el valor de la put es $X$, por tanto:
 por último, el valor de la put tiende a cero si $S$ tiende a infinito:
 \[f_{i,10}=0, \quad \text{i=0,1,2,3,4}\]
 
-los coeficientes $a_j$, $b_j$ y $c_j$ se muestran en forma de matriz
-<<>>=
-
+los coeficientes $a_j$, $b_j$ y $c_j$ son:
+<<echo=FALSE>>=
+put_imp <- function(S,X,r,sigma,Smax,M,N){
+      dt <- 1
+      ds <- Smax/M
+      # Estimacion parametros
+      a <- numeric(M+1)
+      b <- numeric(M+1)
+      c <- numeric(M+1)
+      for(j in 2:M){
+            a[j] <- 0.5*r*(j-1)*dt -0.5*sigma^2*(j-1)^2*dt
+            b[j] <- 1 + sigma^2*(j-1)^2*dt + r*dt
+            c[j] <- -0.5*r*(j-1)*dt -0.5*sigma^2*(j-1)^2*dt
+      }
+      # Condiciones
+      f <- matrix(0, ncol=N+1, nrow = M+1)
+      # Valor intrinseco
+      for(j in 1:(M+1)){
+            f[j,N+1] <- max(X-(j-1)*ds,0)
+      }
+      # Si el subyacente es cero
+      for(i in 1:(N+1)){
+            f[1,i] <- X
+      }
+      # Si el subyacente alcanza el maximo
+      for(i in 1:(N+1)){
+            f[M+1,i] <- 0
+      }
+      ff <- f
+      # Matriz de coeficientes
+      XM <- matrix(0,ncol=M-1, nrow=M-1)
+      XM[1,c(1,2)] <- c(b[2],c[2])
+      for(i in 2:(M-2)){
+            XM[i,c(i-1,i,i+1)] <- c(a[i+1], b[i+1], c[i+1])
+      }
+      XM[M-1,c(M-2,M-1)] <- c(a[M],b[M])
+      # Solucion del enmallado
+      for(i in N:1){
+            vec <- f[2:M,i+1] - c(a[2]*f[1,i], rep(0,M-3) , c[M]*f[M+1,i])
+            f[2:M,i] <- apply(solve(XM)%*%diag(vec), MARGIN = 1, sum)
+      }
+      return(list(Coeficientes=round(cbind(a,b,c),3), Condiciones=ff, Malla=round(f,3), ValorPut=f[(X/ds)+1,1]))
+}
 @
 
+<<echo=FALSE>>=
+put_imp(50,50,0.02,0.2,100,10,4)$Coeficientes[-c(1,11),]
+@
+
+la matriz de los $f_{i,j}$ aplicando las condiciones de contorno es:
+<<echo=FALSE>>=
+put_imp(50,50,0.02,0.2,100,10,4)$Condiciones
+@
 
 \end{document}
