@@ -51,7 +51,7 @@ put_imp <- function(S,X,r,sigma,Smax,M,N){
             vec <- f[2:M,i+1] - c(a[2]*f[1,i], rep(0,M-3) , c[M]*f[M+1,i])
             f[2:M,i] <- apply(solve(XM)%*%diag(vec), MARGIN = 1, sum)
       }
-      return(list(Malla=round(f,4), ValorPut=f[(X/ds)+1,1]))
+      return(list(Coeficientes=round(cbind(a,b,c),3), Malla=round(f,3), ValorPut=f[(X/ds)+1,1]))
 }
 
 put_imp(50,50,0.02,0.2,100,10,4)
