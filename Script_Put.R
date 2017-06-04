@@ -14,7 +14,7 @@
 
 # Metodo Implicito
 put_imp <- function(S,X,r,sigma,Smax,M,N){
-      dt <- 1
+      dt <- 1/12
       ds <- Smax/M
       # Estimacion parametros
       a <- numeric(M+1)
@@ -59,7 +59,7 @@ put_imp(50,50,0.02,0.2,100,10,4)
 
 # Metodo explicito
 put_exp <- function(S,X,r,sigma,Smax,M,N){
-      dt <- 1
+      dt <- 1/12
       ds <- Smax/M
       # Estimacion parametros
       a <- numeric(M+1)
