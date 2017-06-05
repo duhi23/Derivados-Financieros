@@ -69,7 +69,7 @@ por último, el valor de la put tiende a cero si $S$ tiende a infinito:
 los coeficientes $a_j$, $b_j$ y $c_j$ son:
 <<echo=FALSE>>=
 put_imp <- function(S,X,r,sigma,Smax,M,N){
-      dt <- 1
+      dt <- 1/12
       ds <- Smax/M
       # Estimacion parametros
       a <- numeric(M+1)
@@ -107,7 +107,7 @@ put_imp <- function(S,X,r,sigma,Smax,M,N){
             vec <- f[2:M,i+1] - c(a[2]*f[1,i], rep(0,M-3) , c[M]*f[M+1,i])
             f[2:M,i] <- apply(solve(XM)%*%diag(vec), MARGIN = 1, sum)
       }
-      return(list(Coeficientes=round(cbind(a,b,c),3), Condiciones=ff, Malla=round(f,3), ValorPut=f[(X/ds)+1,1]))
+      return(list(Coeficientes=round(cbind(a,b,c),4), Condiciones=ff, Malla=round(f,4), ValorPut=f[(X/ds)+1,1]))
 }
 @
 
@@ -117,7 +117,19 @@ put_imp(50,50,0.02,0.2,100,10,4)$Coeficientes[-c(1,11),]
 
 la matriz de los $f_{i,j}$ aplicando las condiciones de contorno es:
 <<echo=FALSE>>=
-put_imp(50,50,0.02,0.2,100,10,4)$Condiciones
+put_imp(50,50,0.02,0.2,100,10,4)$Condiciones[rev(seq(1,11)),]
 @
+
+La matriz obtenida al resolver el sistema de ecuación es:
+<<echo=FALSE>>=
+put_imp(50,50,0.02,0.2,100,10,4)$Malla[rev(seq(1,11)),]
+@
+
+por tanto, el valor de la put es: $1\mbox{.}2208$.\newline
+
+Para aplicar el método de reducción de la varianza evaluaremos una put americana considerando los mismos datos y 
+
+
+
 
 \end{document}
