@@ -83,12 +83,13 @@ put_exp <- function(S,X,r,sigma,Smax,M,N){
       for(i in 1:(N+1)){
             f[M+1,i] <- 0
       }
+      ff <- f
       for(i in N:1){
             for(j in 2:M){
                   f[j,i] <- a[j]*f[j-1,i+1] + b[j]*f[j,i+1] + c[j]*f[j+1,i+1]
             }
       }
-      return(list(Malla=round(f,4), ValorPut=f[(X/ds)+1,1]))
+      return(list(Coeficientes=round(cbind(a,b,c),3), Condiciones=ff, Malla=round(f,4), ValorPut=f[(X/ds)+1,1]))
 }
 
 put_exp(50,50,0.02,0.2,100,10,4)
